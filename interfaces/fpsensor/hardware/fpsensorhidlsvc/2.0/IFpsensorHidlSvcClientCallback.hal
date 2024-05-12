@@ -1,0 +1,15 @@
+/*
+ * Copyright (C) 2024 The LineageOS Project
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+package vendor.fpsensor.hardware.fpsensorhidlsvc@2.0;
+
+interface IFpsensorHidlSvcClientCallback {
+    oneway onFingerDetected(int32_t finger_status);
+
+    oneway onRawImageCaptured(int32_t result, vec<int8_t> img_len, int32_t img_data_len);
+
+    oneway onCommonPassiveRsp(vec<int8_t> rsp_len, int32_t data_len);
+};

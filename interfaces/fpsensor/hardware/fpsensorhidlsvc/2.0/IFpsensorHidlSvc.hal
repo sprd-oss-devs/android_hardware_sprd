@@ -1,0 +1,29 @@
+/*
+ * Copyright (C) 2024 The LineageOS Project
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+package vendor.fpsensor.hardware.fpsensorhidlsvc@2.0;
+
+import IFpsensorHidlSvcClientCallback;
+
+interface IFpsensorHidlSvc {
+    oneway svc_ctrl(int32_t tag, int32_t value);
+
+    oneway set_property(int32_t tag, int32_t value);
+
+    oneway cancel();
+
+    oneway capture_raw_img(int32_t para);
+
+    oneway finger_detect_async();
+
+    oneway set_callback(IFpsensorHidlSvcClientCallback g_callback_purpose);
+
+    get_img_quality() generates (int32_t result, vec<int32_t> img_quality);
+
+    get_size() generates (int32_t result, vec<int32_t> size);
+
+    ext_cmd(vec<int8_t> cmd) generates (int32_t result, vec<int8_t> data);
+};
