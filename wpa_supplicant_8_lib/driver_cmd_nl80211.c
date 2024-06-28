@@ -194,7 +194,7 @@ int hostapd_del_station_from_mac_addr_list(const u8 *mac_addr)
 }
 //<-- Add for SoftAp Advance Feature END
 
-int wpa_driver_nl80211_driver_cmd(void *priv, u8 *_cmd, char *buf,
+int wpa_driver_nl80211_driver_cmd(void *priv, char *_cmd, char *buf,
                                   size_t buf_len) {
   struct i802_bss *bss = priv;
   struct wpa_driver_nl80211_data *drv = bss->drv;
@@ -632,7 +632,7 @@ int wpa_driver_set_ap_wps_p2p_ie(void *priv, const struct wpabuf *beacon,
 }
 
 int wpa_driver_nl80211_driver_cmd_wnm(void *priv, enum wnm_oper oper,
-                                      const u8 *peer, u8 *buf, u16 *buf_len) {
+                                      const char *peer, u8 *buf, u16 *buf_len) {
   struct i802_bss *bss = priv;
   struct wpa_driver_nl80211_data *drv = bss->drv;
   struct ifreq ifr;
@@ -686,7 +686,7 @@ int driver_init_mac_acl(struct hostapd_data *hapd)
         wpa_printf(MSG_INFO, "accept mac:" MACSTR, MAC2STR(conf->bss[0]->accept_mac[i].addr));
         os_memcpy(buf+15, conf->bss[0]->accept_mac[i].addr, ETH_ALEN);
         i++;
-        err = wpa_driver_nl80211_driver_cmd(hapd->drv_priv, buf, reply, 10);
+        err = wpa_driver_nl80211_driver_cmd(hapd->drv_priv, (char *)buf, reply, 10);
         if(err < 0){
             wpa_printf(MSG_ERROR, "WHITE_ADD_ONCE failed.");
             return err;
@@ -695,7 +695,7 @@ int driver_init_mac_acl(struct hostapd_data *hapd)
     if (conf->bss[0]->macaddr_acl == DENY_UNLESS_ACCEPTED) {
         os_memset(buf, 0, 25);
         strncpy((char *)buf, "WHITE_EN_ONCE ", 14);
-        err = wpa_driver_nl80211_driver_cmd(hapd->drv_priv, buf, reply, 10);
+        err = wpa_driver_nl80211_driver_cmd(hapd->drv_priv, (char *)buf, reply, 10);
         if (err < 0){
             wpa_printf(MSG_ERROR, "WHITE_EN_ONCE failed.");
             return err;
@@ -713,7 +713,7 @@ int driver_init_max_sta_num(struct i802_bss *bss)
     os_snprintf(cmd_buf, sizeof(cmd_buf), "MAX_STA %d", hostapd->conf->max_num_sta);
     if(android_priv_cmd(bss, cmd_buf) < 0) {
         wpa_printf(MSG_ERROR, "android_driver_priv_cmd set max_num_sta to driver fail");
-        if(wpa_driver_nl80211_driver_cmd(bss, (u8 *)"MAX_STA", buf, sizeof(buf))) {
+        if(wpa_driver_nl80211_driver_cmd(bss, (char *)"MAX_STA", buf, sizeof(buf))) {
             wpa_printf(MSG_ERROR, "set max_num_sta to driver fail");
         }
     }
